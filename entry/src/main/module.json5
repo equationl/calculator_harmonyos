@@ -21,6 +21,7 @@
         "startWindowIcon": "$media:startIcon",
         "startWindowBackground": "$color:start_window_background",
         "exported": true,
+        "orientation": "auto_rotation",
         "skills": [
           {
             "entities": [
@@ -31,6 +32,13 @@
             ]
           }
         ]
+      }
+    ],
+    "metadata": [
+      // 避让摄像头挖孔
+      {
+        "name": "avoid_cutout",
+        "value": "true"
       }
     ]
   }

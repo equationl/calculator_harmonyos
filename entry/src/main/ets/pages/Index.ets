@@ -4,11 +4,15 @@ import { hilog } from '@kit.PerformanceAnalysisKit';
 import { CalculatorMode } from '../constant/CalculatorMode';
 import { ProgrammerComponent } from './programmer/ProgrammerComponent';
 import { StandardComponent } from './standard/StandardComponent';
+import { common } from '@kit.AbilityKit';
+import { window } from '@kit.ArkUI';
 
 @Entry
 @Component
 struct Index {
   @State showModel: number = CalculatorMode.Standard
+
+  windowClass?: window.Window
 
   build() {
     Column() {
@@ -47,7 +51,29 @@ struct Index {
 
   aboutToAppear() {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
+    this.init()
     this.loginWithHuaweiID();
+  }
+
+  aboutToDisappear(): void {
+    this.windowClass?.off('windowSizeChange');
+  }
+
+  private async init() {
+    let context = getContext(this) as common.UIAbilityContext;
+    this.windowClass = await context.windowStage.getMainWindow()
+
+    // 监听屏幕变化
+    this.windowClass?.on('windowSizeChange', (size) => {
+      let viewWidth = px2vp(size.width);
+      let viewHeight = px2vp(size.height);
+
+      if (viewWidth > viewHeight) {
+        this.showModel = CalculatorMode.Programmer
+      } else {
+        this.showModel = CalculatorMode.Standard
+      }
+    });
   }
 
   /**
@@ -80,9 +106,23 @@ struct Index {
   }
 
   private changeShowModel() {
-    this.showModel += 1
-    if (this.showModel > CalculatorMode.Programmer) {
-      this.showModel = CalculatorMode.Standard
+    let newShowModel = this.showModel += 1
+    if (newShowModel > CalculatorMode.Programmer) {
+      newShowModel= CalculatorMode.Standard
     }
+
+    // if (this.showModel == CalculatorMode.Programmer) {
+    //   this.setOrientation(window.Orientation.LANDSCAPE)
+    // }
+
+    this.setOrientation(newShowModel)
+  }
+
+  private async setOrientation(orientation: number) {
+    this.windowClass?.setPreferredOrientation(orientation).then(() => {
+      console.info('setWindowOrientation: ' + orientation + ' Succeeded.');
+    }).catch((err: BusinessError) => {
+      console.info('setWindowOrientation: ' + orientation + ' Failed. Cause: ' + JSON.stringify(err));
+    });
   }
 }

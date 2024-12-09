@@ -40,6 +40,21 @@
         "name": "avoid_cutout",
         "value": "true"
       }
+    ],
+    "extensionAbilities": [
+      {
+        "name": "EntryFormAbility0",
+        "srcEntry": "./ets/entryformability0/EntryFormAbility0.ets",
+        "label": "$string:EntryFormAbility0_label",
+        "description": "$string:EntryFormAbility0_desc",
+        "type": "form",
+        "metadata": [
+          {
+            "name": "ohos.extension.form",
+            "resource": "$profile:form_config"
+          }
+        ]
+      }
     ]
   }
 }

@@ -11,6 +11,22 @@
     {
       "name": "EntryAbility_label",
       "value": "label"
+    },
+    {
+      "name": "EntryFormAbility0_desc",
+      "value": "form_description"
+    },
+    {
+      "name": "EntryFormAbility0_label",
+      "value": "form_label"
+    },
+    {
+      "name": "startWidget_desc",
+      "value": "This is a start service widget."
+    },
+    {
+      "name": "startWidget_display_name",
+      "value": "startWidget"
     }
   ]
 }

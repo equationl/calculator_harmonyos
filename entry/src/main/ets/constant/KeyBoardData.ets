@@ -117,6 +117,43 @@ export class KeyBoardData {
     ]
   ]
 
+  static standardKeyBoardList = [
+    [
+      new KeyBoardBean("%", this.defaultFunctionColor,  this.KeyIndex_Percentage),
+      new KeyBoardBean("CE", this.defaultFunctionColor, this.KeyIndex_CE),
+      new KeyBoardBean("C", this.defaultFunctionColor,  this.KeyIndex_Clear),
+      new KeyBoardBean("⇦", this.defaultFunctionColor,  this.KeyIndex_Back),
+    ],
+    [
+      new KeyBoardBean("1/x", this.defaultFunctionColor, this.KeyIndex_Reciprocal),
+      new KeyBoardBean("x²", this.defaultFunctionColor,  this.KeyIndex_Pow2),
+      new KeyBoardBean("√x", this.defaultFunctionColor,  this.KeyIndex_Sqrt),
+      new KeyBoardBean(OperatorEnum.Divide, this.defaultFunctionColor, this.KeyIndex_Divide),
+    ],
+    [
+      new KeyBoardBean("7", this.defaultNumberColor, this.KeyIndex_7),
+      new KeyBoardBean("8", this.defaultNumberColor, this.KeyIndex_8),
+      new KeyBoardBean("9", this.defaultNumberColor, this.KeyIndex_9),
+      new KeyBoardBean(OperatorEnum.MULTIPLY, this.defaultFunctionColor, this.KeyIndex_Multiply),
+    ],
+    [
+      new KeyBoardBean("4", this.defaultNumberColor, this.KeyIndex_4),
+      new KeyBoardBean("5", this.defaultNumberColor, this.KeyIndex_5),
+      new KeyBoardBean("6", this.defaultNumberColor, this.KeyIndex_6),
+      new KeyBoardBean(OperatorEnum.MINUS, this.defaultFunctionColor, this.KeyIndex_Minus),
+    ],
+    [
+      new KeyBoardBean("1", this.defaultNumberColor, this.KeyIndex_1),
+      new KeyBoardBean("2", this.defaultNumberColor, this.KeyIndex_2),
+      new KeyBoardBean("3", this.defaultNumberColor, this.KeyIndex_3),
+      new KeyBoardBean(OperatorEnum.ADD, this.defaultFunctionColor, this.KeyIndex_Add),
+    ],
+    new KeyBoardBean("+/-", this.defaultNumberColor, this.KeyIndex_NegativeNumber),
+    new KeyBoardBean("0", this.defaultNumberColor,   this.KeyIndex_0),
+    new KeyBoardBean(".", this.defaultNumberColor,   this.KeyIndex_Point),
+    new KeyBoardBean("=", this.defaultEqualColor,    this.KeyIndex_Equal, true),
+  ]
+
   static BitOperationList = [
     OperatorEnum.NOT,
     OperatorEnum.AND,

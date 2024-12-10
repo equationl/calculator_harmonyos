@@ -67,5 +67,5 @@ export function baseConversion(
 
   let result = new BigNumber(src, current)
 
-  return result.toString(target)
+  return result.toString(target).toUpperCase()
 }

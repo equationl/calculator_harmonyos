@@ -148,10 +148,12 @@ export class KeyBoardData {
       new KeyBoardBean("3", this.defaultNumberColor, this.KeyIndex_3),
       new KeyBoardBean(OperatorEnum.ADD, this.defaultFunctionColor, this.KeyIndex_Add),
     ],
-    new KeyBoardBean("+/-", this.defaultNumberColor, this.KeyIndex_NegativeNumber),
-    new KeyBoardBean("0", this.defaultNumberColor,   this.KeyIndex_0),
-    new KeyBoardBean(".", this.defaultNumberColor,   this.KeyIndex_Point),
-    new KeyBoardBean("=", this.defaultEqualColor,    this.KeyIndex_Equal, true),
+    [
+      new KeyBoardBean("+/-", this.defaultNumberColor, this.KeyIndex_NegativeNumber),
+      new KeyBoardBean("0", this.defaultNumberColor,   this.KeyIndex_0),
+      new KeyBoardBean(".", this.defaultNumberColor,   this.KeyIndex_Point),
+      new KeyBoardBean("=", this.defaultEqualColor,    this.KeyIndex_Equal, true),
+    ]
   ]
 
   static BitOperationList = [

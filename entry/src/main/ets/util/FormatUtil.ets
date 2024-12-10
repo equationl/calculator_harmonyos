@@ -58,7 +58,7 @@ export function formatNumber(
       // 给整数部分添加逗号分隔符
       if (integer.length > splitLength) {
         let end = integer[0] == '-' ? 2 : 1 // 判断是否有前导符号
-        for (let i = integer.length-splitLength; i >= end; i+=splitLength) {
+        for (let i = integer.length-splitLength; i >= end; i-=splitLength) {
           integer.splice(i, 0, addSplitChar)
           addCharCount++
         }

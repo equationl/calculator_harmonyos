@@ -13,7 +13,7 @@ export struct ProgrammerComponent {
   @State
   currentInputBase: InputBase = InputBase.DEC
   @State
-  currentLength: ProgrammerLength = ProgrammerLength.QWORD
+  currentLength: ProgrammerLength = ProgrammerLength.QWORD // TODO 需要限制长度
   @State
   forbidBtn: number[] = []
   @State
@@ -56,6 +56,10 @@ export struct ProgrammerComponent {
     .width('100%')
     .height('100%')
     .alignItems(VerticalAlign.Center)
+  }
+
+  aboutToAppear(): void {
+    this.forbidBtn = getForbidBtn(this.currentInputBase)
   }
 
   @Builder
@@ -113,32 +117,13 @@ export struct ProgrammerComponent {
       Scroll() {
         Column() {
           // 不同进制数据
-          this.BaseDataItem(
-            InputBase.HEX,
-            formatNumber(
-              baseConversion(this.inputValue, InputBase.HEX, this.currentInputBase, this.currentLength), " ", 4,
-            )
-          )
+          this.BaseDataItem(InputBase.HEX)
 
-          this.BaseDataItem(
-            InputBase.DEC,
-            formatNumber(baseConversion(this.inputValue, InputBase.DEC, this.currentInputBase, this.currentLength),)
-          )
+          this.BaseDataItem(InputBase.DEC)
 
-          this.BaseDataItem(
-            InputBase.OCT,
-            formatNumber(
-              baseConversion(this.inputValue, InputBase.OCT, this.currentInputBase, this.currentLength), " "
-            )
-          )
+          this.BaseDataItem(InputBase.OCT)
 
-          this.BaseDataItem(
-            InputBase.BIN,
-            formatNumber(
-              baseConversion(this.inputValue, InputBase.BIN, this.currentInputBase, this.currentLength), " ", 4,
-              this.inputValue != "0"
-            )
-          )
+          this.BaseDataItem(InputBase.BIN)
         }
         .alignItems(HorizontalAlign.Start)
         .width('100%')
@@ -174,14 +159,21 @@ export struct ProgrammerComponent {
   }
 
   @Builder
-  private BaseDataItem(inputBase: InputBase, value: string) {
+  private BaseDataItem(inputBase: InputBase) {
     Row() {
       Text(InputBase[inputBase])
         .fontSize(this.currentInputBase == inputBase ? $r('app.float.input_title_content_font_size') :
         $r('app.float.input_normal_font_size'))
         .fontWeight(this.currentInputBase == inputBase ? FontWeight.Bold : FontWeight.Normal)
 
-      Text(value)
+      Text(
+        formatNumber(
+          baseConversion(this.inputValue, inputBase, this.currentInputBase, this.currentLength),
+          inputBase == InputBase.DEC ? "," : " ",
+          inputBase == InputBase.HEX || inputBase == InputBase.BIN ? 4 : 3,
+          inputBase == InputBase.BIN && this.inputValue != "0" ? true : false
+        )
+      )
         .fontSize($r('app.float.input_normal_font_size'))
         .padding({ left: 8 })
     }
@@ -203,6 +195,8 @@ export struct ProgrammerComponent {
       .enabled(item.isAvailable && !this.forbidBtn.includes(item.index))
       .backgroundColor(item.isFilled ? item.color : $r('app.color.button_background'))
       .fontColor(item.isFilled ? $r('sys.color.font_on_primary') : item.color)
+      .fontWeight(FontWeight.Bold)
+      .fontSize($r('app.float.button_font_size'))
   }
 
   // ==================================================================================================================
@@ -309,7 +303,7 @@ export struct ProgrammerComponent {
       case KeyBoardData.KeyIndex_Rsh:
         this.clickArithmetic(OperatorEnum.RSH)
         break
-      case KeyBoardData.KeyIndex_Not:
+      case KeyBoardData.KeyIndex_Not: // fixme 不限制长度的话无法取反
         this.clickNot()
         break
       case KeyBoardData.KeyIndex_CE:
@@ -377,9 +371,11 @@ export struct ProgrammerComponent {
       if (this.isAdvancedCalculated) {
         this.showText = this.showText + "="
         this.isFinalResult = true
+        this.lastInputValue = this.inputValue
       } else {
         this.showText = this.inputValue + "="
         this.isFinalResult = true
+        this.lastInputValue = this.inputValue
       }
       this.isCalculated = true
     } else {
@@ -410,10 +406,10 @@ export struct ProgrammerComponent {
             this.showText = inputValue + this.inputOperator + this.lastInputValue + "="
             this.isFinalResult = true
           } else {
+            this.lastInputValue = this.inputValue
             this.inputValue = resultText
             this.showText = this.lastInputValue + this.inputOperator + inputValue + "="
             this.isFinalResult = true
-            this.lastInputValue = this.inputValue
           }
         }
         this.isCalculated = true
@@ -431,7 +427,6 @@ export struct ProgrammerComponent {
   }
 
   private programmerCalculate(): string | Error {
-    // TODO
     let leftText: string
     let rightText: string
     if (this.isCalculated) {

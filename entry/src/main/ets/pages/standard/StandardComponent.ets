@@ -76,5 +76,7 @@ export struct StandardComponent {
       .type(ButtonType.Normal)
       .backgroundColor(item.isFilled ? item.color : $r('app.color.button_background'))
       .fontColor(item.isFilled ? $r('sys.color.font_on_primary') : item.color)
+      .fontWeight(FontWeight.Bold)
+      .fontSize($r('app.float.button_font_size'))
   }
 }

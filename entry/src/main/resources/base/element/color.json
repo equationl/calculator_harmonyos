@@ -7,6 +7,22 @@
     {
       "name": "item_title_font",
       "value": "#E6000000"
+    },
+    {
+      "name": "button_function",
+      "value": "#FFFFC107"
+    },
+    {
+      "name": "button_number",
+      "value": "#E6000000"
+    },
+    {
+      "name": "button_equal",
+      "value": "#FFFFA000"
+    },
+    {
+      "name": "button_background",
+      "value": "#FFFFFFFF"
     }
   ]
 }

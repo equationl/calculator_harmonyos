@@ -3,6 +3,22 @@
     {
       "name": "font_size",
       "value": "14fp"
+    },
+    {
+      "name": "show_normal_font_size",
+      "value": "22fp"
+    },
+    {
+      "name": "show_large_font_size",
+      "value": "32fp"
+    },
+    {
+      "name": "input_title_content_font_size",
+      "value": "26fp"
+    },
+    {
+      "name": "input_normal_font_size",
+      "value": "20fp"
     }
   ]
 }

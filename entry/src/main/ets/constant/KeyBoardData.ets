@@ -2,9 +2,9 @@ import { KeyBoardBean } from '../common/dataBean/KeyBoardBean';
 import { OperatorEnum } from '../common/dataBean/OperatorEnum';
 
 export class KeyBoardData {
-  private static defaultFunctionColor = Color.Orange
-  private static defaultEqualColor = Color.Yellow
-  private static defaultNumberColor = Color.Black
+  private static defaultFunctionColor = $r('app.color.button_function')
+  private static defaultEqualColor = $r('app.color.button_equal')
+  private static defaultNumberColor = $r('app.color.button_number')
 
   // 数字按键
   static KeyIndex_0 = 0
@@ -115,5 +115,14 @@ export class KeyBoardData {
       new KeyBoardBean("0", this.defaultNumberColor,  this.KeyIndex_0),
       new KeyBoardBean(">>", this.defaultFunctionColor,  this.KeyIndex_Rsh)
     ]
+  ]
+
+  static BitOperationList = [
+    OperatorEnum.NOT,
+    OperatorEnum.AND,
+    OperatorEnum.OR,
+    OperatorEnum.XOR,
+    OperatorEnum.LSH,
+    OperatorEnum.RSH
   ]
 }

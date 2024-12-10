@@ -4,17 +4,17 @@ export class KeyBoardBean {
   /**
    * 设置按钮颜色，设置范围取决于 [isFilled]
    * */
-  background: Color
+  color: Resource
   index: number
   /**
-   * 是否填充该按钮，如果为 true 则 [background] 用于填充该按钮背景；否则，[background] 用于设置该按钮字体颜色
+   * 是否填充该按钮，如果为 true 则 [color] 用于填充该按钮背景；否则，[color] 用于设置该按钮字体颜色
    * */
-  isFilled: Boolean
-  isAvailable: Boolean
+  isFilled: boolean
+  isAvailable: boolean
 
-  constructor(text: string, background: Color, index: number, isFilled: boolean = false, isAvailable: boolean = true) {
+  constructor(text: string, color: Resource, index: number, isFilled: boolean = false, isAvailable: boolean = true) {
     this.text = text
-    this.background = background
+    this.color = color
     this.index = index
     this.isFilled = isFilled
     this.isAvailable = isAvailable

@@ -6,6 +6,9 @@ import { ProgrammerLength } from '../../common/dataBean/ProgrammerLength'
 import { KeyBoardData } from '../../constant/KeyBoardData'
 import { baseConversion, calculate } from '../../util/CalculaUtil'
 import { formatNumber } from '../../util/FormatUtil'
+import { window } from '@kit.ArkUI'
+import { BusinessError } from '@kit.BasicServicesKit'
+import { common } from '@kit.AbilityKit'
 
 @Preview({ width: 1920, height: 1080 })
 @Component
@@ -37,6 +40,8 @@ export struct ProgrammerComponent {
   /** 标记输入新的数字时是否需要清除当前输入值 */
   isNeedClrInput: Boolean = false
 
+  windowClass?: window.Window
+
   build() {
     Column() {
       // 顶部菜单
@@ -57,7 +62,6 @@ export struct ProgrammerComponent {
 
         this.RightKeyBoardContent()
       }
-      .margin({top: $r('app.float.top_title_bar_height')})
       .width('100%')
       .height('100%')
       .alignItems(VerticalAlign.Center)
@@ -67,19 +71,38 @@ export struct ProgrammerComponent {
   }
 
   aboutToAppear(): void {
+    this.init()
     this.forbidBtn = getForbidBtn(this.currentInputBase)
   }
 
   @Builder
   private TopBar() {
     Row() {
-      // TODO 程序员计算器的顶部菜单
+      Row() {
+        SymbolGlyph($r('sys.symbol.rectangle_portrait_rotate'))
+
+        Text('程序员')
+      }
+      .height('100%')
+      .width('50%')
+      .justifyContent(FlexAlign.Start)
+      .alignItems(VerticalAlign.Top)
+      .onClick(() => {
+        this.setOrientation(window.Orientation.PORTRAIT)
+      })
+
+
+      Row() {
+        // TODO 程序员模式的顶部菜单
+      }
+      .height('100%')
+      .width('50%')
+      .justifyContent(FlexAlign.End)
+      .alignItems(VerticalAlign.Top)
     }
     .height($r('app.float.top_title_bar_height'))
     .width('100%')
-    .padding(8)
-    .justifyContent(FlexAlign.End)
-    .alignItems(VerticalAlign.Top)
+    .justifyContent(FlexAlign.SpaceBetween)
   }
 
   @Builder
@@ -220,6 +243,19 @@ export struct ProgrammerComponent {
   }
 
   // ==================================================================================================================
+
+  private async init() {
+    let context = getContext(this) as common.UIAbilityContext;
+    this.windowClass = await context.windowStage.getMainWindow()
+  }
+
+  private async setOrientation(orientation: number) {
+    this.windowClass?.setPreferredOrientation(orientation).then(() => {
+      console.info('setWindowOrientation: ' + orientation + ' Succeeded.');
+    }).catch((err: BusinessError) => {
+      console.info('setWindowOrientation: ' + orientation + ' Failed. Cause: ' + JSON.stringify(err));
+    });
+  }
 
   // 更换当前使用的进制
   private changeInputBase(newInputBase: InputBase) {

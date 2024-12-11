@@ -6,6 +6,9 @@ import { formatNumber } from '../../util/FormatUtil'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 import { BigNumber } from 'bignumber.js'
 import { HistoryBean } from '../../common/dataBean/HistoryBean'
+import { window } from '@kit.ArkUI'
+import { common } from '@kit.AbilityKit'
+import { BusinessError } from '@kit.BasicServicesKit'
 
 @Preview
 @Component
@@ -37,54 +40,72 @@ export struct StandardComponent {
   /** 标记输入新的数字时是否需要清除当前输入值 */
   private isNeedClrInput: Boolean = false
 
+  windowClass?: window.Window
+
   build() {
     Column() {
       // 顶部菜单
       this.TopBar()
 
-      Column() {
-        // 显示数据
-        this.ShowScreenContent()
+      // 显示数据
+      this.ShowScreenContent()
 
-        Divider()
-          .width('100%')
-          .padding({ left: 16, right: 16 })
-
-        Stack() {
-
-          // 键盘
-          this.KeyBoardContent()
-
-          // 历史记录
-          if (this.isShowHistory) {
-            this.HistoryScreen()
-          }
-        }
+      Divider()
         .width('100%')
-        .height('60%')
+        .padding({ left: 16, right: 16 })
+
+      Stack() {
+
+        // 键盘
+        this.KeyBoardContent()
+
+        // 历史记录
+        if (this.isShowHistory) {
+          this.HistoryScreen()
+        }
       }
-      // .margin({top: $r('app.float.top_title_bar_height')}) // fixme need confirm
       .width('100%')
-      .height('100%')
+      .height('60%')
     }
     .width('100%')
     .height('100%')
   }
 
+  aboutToAppear(): void {
+    this.init()
+  }
+
   @Builder
   private TopBar() {
     Row() {
-      SymbolGlyph($r('sys.symbol.arrow_counterclockwise_clock'))
-        .onClick(() => {
-          this.isShowHistory = !this.isShowHistory
-        })
+      Row() {
+        SymbolGlyph($r('sys.symbol.rectangle_portrait_rotate'))
+
+        Text('标准')
+      }
+      .height('100%')
+      .width('50%')
+      .justifyContent(FlexAlign.Start)
+      .alignItems(VerticalAlign.Top)
+      .onClick(() => {
+        this.setOrientation(window.Orientation.LANDSCAPE)
+      })
+
+
+      Row() {
+        SymbolGlyph($r('sys.symbol.arrow_counterclockwise_clock'))
+          .onClick(() => {
+            this.isShowHistory = !this.isShowHistory
+          })
+      }
+      .height('100%')
+      .width('50%')
+      .justifyContent(FlexAlign.End)
+      .alignItems(VerticalAlign.Top)
     }
     .height($r('app.float.top_title_bar_height'))
     .width('100%')
-    .padding(8)
-    .justifyContent(FlexAlign.End)
-    .alignItems(VerticalAlign.Top)
-    .margin({right: 300}) // fixme 避开悬浮按钮
+    .justifyContent(FlexAlign.SpaceBetween)
   }
 
   @Builder
@@ -220,6 +241,19 @@ export struct StandardComponent {
   }
 
   // =================================================================================================================
+
+  private async init() {
+    let context = getContext(this) as common.UIAbilityContext;
+    this.windowClass = await context.windowStage.getMainWindow()
+  }
+
+  private async setOrientation(orientation: number) {
+    this.windowClass?.setPreferredOrientation(orientation).then(() => {
+      console.info('setWindowOrientation: ' + orientation + ' Succeeded.');
+    }).catch((err: BusinessError) => {
+      console.info('setWindowOrientation: ' + orientation + ' Failed. Cause: ' + JSON.stringify(err));
+    });
+  }
 
   private clickBtn(no: number) {
     if (this.isErr) {

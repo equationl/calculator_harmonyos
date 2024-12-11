@@ -16,20 +16,6 @@ struct Index {
 
   build() {
     Stack({alignContent: Alignment.TopStart}) {
-      Row() {
-        SymbolGlyph($r('sys.symbol.rectangle_portrait_rotate'))
-
-        Text(this.showModel == CalculatorMode.Standard ? '标准' : '程序员')
-      }
-      .height($r('app.float.top_title_bar_height'))
-      .width('100%')
-      .padding(8)
-      .justifyContent(FlexAlign.Start)
-      .alignItems(VerticalAlign.Top)
-      .onClick(() => {
-        this.changeShowModel()
-      })
-
       if (this.showModel == CalculatorMode.Standard) {
         StandardComponent()
       }
@@ -97,24 +83,4 @@ struct Index {
     });
   }
 
-  private changeShowModel() {
-    let newShowModel = this.showModel += 1
-    if (newShowModel > CalculatorMode.Programmer) {
-      newShowModel= CalculatorMode.Standard
-    }
-
-    // if (this.showModel == CalculatorMode.Programmer) {
-    //   this.setOrientation(window.Orientation.LANDSCAPE)
-    // }
-
-    this.setOrientation(newShowModel)
-  }
-
-  private async setOrientation(orientation: number) {
-    this.windowClass?.setPreferredOrientation(orientation).then(() => {
-      console.info('setWindowOrientation: ' + orientation + ' Succeeded.');
-    }).catch((err: BusinessError) => {
-      console.info('setWindowOrientation: ' + orientation + ' Failed. Cause: ' + JSON.stringify(err));
-    });
-  }
 }

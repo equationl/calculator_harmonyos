@@ -10,7 +10,7 @@
     },
     {
       "name": "EntryAbility_label",
-      "value": "label"
+      "value": "隐云计算器"
     },
     {
       "name": "EntryFormAbility0_desc",
@@ -18,15 +18,15 @@
     },
     {
       "name": "EntryFormAbility0_label",
-      "value": "form_label"
+      "value": "隐云计算器"
     },
     {
       "name": "startWidget_desc",
-      "value": "This is a start service widget."
+      "value": "快速打开隐云计算器"
     },
     {
       "name": "startWidget_display_name",
-      "value": "startWidget"
+      "value": "隐云计算器"
     }
   ]
 }

@@ -191,7 +191,7 @@ export struct ProgrammerComponent {
           baseConversion(this.inputValue, inputBase, this.currentInputBase, this.currentLength),
           inputBase == InputBase.DEC ? "," : " ",
           inputBase == InputBase.HEX || inputBase == InputBase.BIN ? 4 : 3,
-          inputBase == InputBase.BIN && this.inputValue != "0" ? true : false
+          inputBase == InputBase.BIN && this.inputValue != "0" && !this.inputValue.includes("-") ? true : false
         )
       )
         .fontSize($r('app.float.input_normal_font_size'))
@@ -494,21 +494,23 @@ export struct ProgrammerComponent {
     //   .inv().toString()  // 计算
     //   .baseConversion(viewStates.value.inputBase, InputBase.DEC) // 转回当前进制
 
-    // FIXME need confirm
-    let result = (!Number.parseInt(baseConversion(this.inputValue, InputBase.DEC, this.currentInputBase, this.currentLength))).toString()
+    // FIXME 这里不限制位数的话取反超出 int（64位） 时 会在前面加负号，而不是溢出
+    let result = (~Number.parseInt(baseConversion(this.inputValue, InputBase.DEC, this.currentInputBase, this.currentLength))).toString()
     result = baseConversion(result, this.currentInputBase, InputBase.DEC, this.currentLength)
 
+    let tempInputValue = result
 
-    this.inputValue = result
     if (this.isInputSecondValue) {
-      this.showText = this.lastInputValue + this.inputOperator + OperatorEnum.NOT + (this.inputValue)
+      this.showText = `${this.lastInputValue}${this.inputOperator}${OperatorEnum.NOT}(${this.inputValue})`
       this.isFinalResult = false
+      this.inputValue = tempInputValue
     }
     else {
       this.inputOperator = OperatorEnum.NUll
       this.lastInputValue = result
-      this.showText = OperatorEnum.NOT + (this.inputValue)
+      this.showText = `${OperatorEnum.NOT}(${this.inputValue})`
       this.isFinalResult = false
+      this.inputValue = tempInputValue
 
       this.isInputSecondValue = true
     }

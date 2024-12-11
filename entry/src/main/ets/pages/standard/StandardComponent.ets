@@ -18,8 +18,10 @@ export struct StandardComponent {
   @State
   lastInputValue: string = ""
   @State
+  @Watch('onShowTextChange')
   showText: string = ""
   @State
+  @Watch('onInputTextChange')
   inputValue: string = "0"
   @State
   isFinalResult: boolean = false
@@ -40,7 +42,9 @@ export struct StandardComponent {
   /** 标记输入新的数字时是否需要清除当前输入值 */
   private isNeedClrInput: Boolean = false
 
-  windowClass?: window.Window
+  private windowClass?: window.Window
+  private showTextScroller: Scroller = new Scroller()
+  private inputTextScroller: Scroller = new Scroller()
 
   build() {
     Column() {
@@ -117,11 +121,13 @@ export struct StandardComponent {
         .fontWeight(FontWeight.Lighter)
         .padding({ left: 12, right: 12, bottom: 16 })
         .opacity(0.5)
+        .maxLines(8)
+        .textOverflow({overflow: TextOverflow.Ellipsis})
 
       // 当前工作区
       Column() {
         // 计算公式
-        Scroll() {
+        Scroll(this.showTextScroller) {
           Row() {
             Text(this.showText)
               .fontSize($r('app.float.show_small_font_size'))
@@ -132,12 +138,15 @@ export struct StandardComponent {
         .scrollable(ScrollDirection.Horizontal)
 
         // 输入值或计算结果
-        Row() {
-          Text(formatNumber(this.inputValue, ",", 3, false, this.isFinalResult, true, false))
-            .fontSize($r('app.float.show_large_font_size'))
-            .fontWeight(FontWeight.Bold)
+        Scroll(this.inputTextScroller) {
+          Row() {
+            Text(formatNumber(this.inputValue, ",", 3, false, this.isFinalResult, true, false))
+              .fontSize($r('app.float.show_large_font_size'))
+              .fontWeight(FontWeight.Bold)
+          }
+          .padding({ right: 8, top: 8, bottom: 8 })
         }
-        .padding({ right: 8, top: 8, bottom: 8 })
+        .scrollable(ScrollDirection.Horizontal)
       }
       .alignItems(HorizontalAlign.End)
     }
@@ -245,6 +254,14 @@ export struct StandardComponent {
   private async init() {
     let context = getContext(this) as common.UIAbilityContext;
     this.windowClass = await context.windowStage.getMainWindow()
+  }
+
+  private onShowTextChange() {
+    this.showTextScroller.scrollEdge(Edge.End)
+  }
+
+  private onInputTextChange() {
+    this.inputTextScroller.scrollEdge(Edge.End)
   }
 
   private async setOrientation(orientation: number) {
@@ -647,5 +664,6 @@ export struct StandardComponent {
     this.showText = ""
     this.inputValue = "0"
     this.isFinalResult = false
+    this.inputOperator = OperatorEnum.NUll
   }
 }

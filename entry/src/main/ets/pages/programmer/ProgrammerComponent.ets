@@ -20,8 +20,10 @@ export struct ProgrammerComponent {
   @State
   forbidBtn: number[] = []
   @State
+  @Watch('onShowTextChange')
   showText: string = ""
   @State
+  @Watch('onInputTextChange')
   inputValue: string = "0"
   @State
   lastInputValue: string = ""
@@ -41,6 +43,8 @@ export struct ProgrammerComponent {
   isNeedClrInput: Boolean = false
 
   windowClass?: window.Window
+  private showTextScroller: Scroller = new Scroller()
+  private inputTextScroller: Scroller = new Scroller()
 
   build() {
     Column() {
@@ -132,13 +136,16 @@ export struct ProgrammerComponent {
     Column() {
       Column() {
         // 计算公式
-        Text(this.showText)
-          .padding(8)
-          .fontSize($r('app.float.show_normal_font_size'))
-          .fontWeight(FontWeight.Lighter)
+        Scroll(this.showTextScroller) {
+          Text(this.showText)
+            .padding(8)
+            .fontSize($r('app.float.show_normal_font_size'))
+            .fontWeight(FontWeight.Lighter)
+        }
+        .scrollable(ScrollDirection.Horizontal)
 
         // 输入值或计算结果
-        Scroll() {
+        Scroll(this.inputTextScroller) {
           Text(
             formatNumber(
               this.inputValue,
@@ -173,6 +180,7 @@ export struct ProgrammerComponent {
       }
       .scrollable(ScrollDirection.Vertical)
       .width('100%')
+      .height('60%')
     }
     .justifyContent(FlexAlign.SpaceAround)
     .width('50%')
@@ -219,6 +227,9 @@ export struct ProgrammerComponent {
       )
         .fontSize($r('app.float.input_normal_font_size'))
         .padding({ left: 8 })
+        // .width('100%')
+        // .maxLines(2)
+        // .textOverflow({overflow: TextOverflow.Ellipsis})
     }
     .alignItems(VerticalAlign.Center)
     .padding(2)
@@ -247,6 +258,14 @@ export struct ProgrammerComponent {
   private async init() {
     let context = getContext(this) as common.UIAbilityContext;
     this.windowClass = await context.windowStage.getMainWindow()
+  }
+
+  private onShowTextChange() {
+    this.showTextScroller.scrollEdge(Edge.End)
+  }
+
+  private onInputTextChange() {
+    this.inputTextScroller.scrollEdge(Edge.End)
   }
 
   private async setOrientation(orientation: number) {

@@ -1,6 +1,11 @@
 {
   "float": [
     {
+      "name": "top_title_bar_height",
+      "value": "30vp"
+    },
+
+    {
       "name": "font_size",
       "value": "14fp"
     },

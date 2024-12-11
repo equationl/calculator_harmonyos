@@ -5,6 +5,7 @@ import { calculate } from '../../util/CalculaUtil'
 import { formatNumber } from '../../util/FormatUtil'
 import { hilog } from '@kit.PerformanceAnalysisKit'
 import { BigNumber } from 'bignumber.js'
+import { HistoryBean } from '../../common/dataBean/HistoryBean'
 
 @Preview
 @Component
@@ -21,6 +22,10 @@ export struct StandardComponent {
   isFinalResult: boolean = false
   @State
   inputOperator: OperatorEnum = OperatorEnum.NUll
+  @State
+  isShowHistory: boolean = false
+  @State
+  historyData: HistoryBean[] = []
   /**标记第一个值输入后，是否开始输入第二个值*/
   private isInputSecondValue: Boolean = false
   /**标记是否已计算最终结果*/
@@ -34,25 +39,52 @@ export struct StandardComponent {
 
   build() {
     Column() {
-      // 显示数据
-      this.ShowScreenContent()
+      // 顶部菜单
+      this.TopBar()
 
-      Divider()
+      Column() {
+        // 显示数据
+        this.ShowScreenContent()
+
+        Divider()
+          .width('100%')
+          .padding({ left: 16, right: 16 })
+
+        Stack() {
+
+          // 键盘
+          this.KeyBoardContent()
+
+          // 历史记录
+          if (this.isShowHistory) {
+            this.HistoryScreen()
+          }
+        }
         .width('100%')
-        .padding({ left: 16, right: 16 })
-
-      Stack() {
-
-        // 键盘
-        this.KeyBoardContent()
-
-        this.HistoryScreen()
+        .height('60%')
       }
+      // .margin({top: $r('app.float.top_title_bar_height')}) // fixme need confirm
       .width('100%')
-      .height('60%')
+      .height('100%')
     }
     .width('100%')
     .height('100%')
+  }
+
+  @Builder
+  private TopBar() {
+    Row() {
+      SymbolGlyph($r('sys.symbol.arrow_counterclockwise_clock'))
+        .onClick(() => {
+          this.isShowHistory = !this.isShowHistory
+        })
+    }
+    .height($r('app.float.top_title_bar_height'))
+    .width('100%')
+    .padding(8)
+    .justifyContent(FlexAlign.End)
+    .alignItems(VerticalAlign.Top)
+    .margin({right: 300}) // fixme 避开悬浮按钮
   }
 
   @Builder
@@ -92,6 +124,9 @@ export struct StandardComponent {
     .width('100%')
     .alignItems(HorizontalAlign.End)
     .justifyContent(FlexAlign.SpaceAround)
+    .onClick(() => {
+      this.isShowHistory = false
+    })
   }
 
   @Builder
@@ -118,7 +153,57 @@ export struct StandardComponent {
 
   @Builder
   private HistoryScreen() {
-    // TODO 历史记录弹窗
+    Column() {
+      if (this.historyData.length == 0) {
+        Text("还没有历史记录")
+      }
+      else {
+        List({ space: 20, initialIndex: 0 }) {
+          ForEach(this.historyData, (item: HistoryBean) => {
+            ListItem() {
+              Column() {
+                Text(item.showText)
+                  .fontSize(22)
+                  .fontWeight(FontWeight.Lighter)
+                Text(item.result)
+                  .fontSize(32)
+                  .fontWeight(FontWeight.Bold)
+                  .padding({top: 4})
+              }
+              .width('100%')
+              .alignItems(HorizontalAlign.End)
+              .onClick(() => {
+                this.clickHistoryItem(item)
+              })
+            }
+          }, (item: HistoryBean) => item.time)
+        }
+        .listDirection(Axis.Vertical)
+        .scrollBar(BarState.Off)
+        .friction(0.6)
+        //.divider({ strokeWidth: 2, color: 0xFFFFFF, startMargin: 20, endMargin: 20 }) // 每行之间的分界线
+        .edgeEffect(EdgeEffect.Spring) // 边缘效果设置为Spring
+        .width('100%')
+        .height('90%')
+
+
+        // 删除
+        Row() {
+          SymbolGlyph($r('sys.symbol.trash_fill'))
+            .onClick(() => {
+              this.historyData = []
+              this.isShowHistory = false
+            })
+        }
+        .width('100%')
+        .height('10%')
+        .justifyContent(FlexAlign.End)
+      }
+    }
+    .width('100%')
+    .height('100%')
+    .padding(8)
+    .backgroundColor($r('sys.color.container_modal_background'))
   }
 
   @Builder
@@ -499,8 +584,27 @@ export struct StandardComponent {
 
   }
 
-  private onCalculateFinish(inputValueCache: String) {
-    // TODO 储存历史记录
+  private onCalculateFinish(inputValueCache: string) {
+    this.isAdvancedCalculated = false
+    if (!this.isErr) {
+      this.historyData.push(
+        new HistoryBean(
+         this.showText,
+          this.lastInputValue,
+          inputValueCache,
+          this.inputOperator,
+          this.inputValue
+        )
+      )
+    }
+  }
+
+  private clickHistoryItem(item: HistoryBean) {
+    this.inputValue = item.result
+    this.lastInputValue = item.lastInputText
+    this.inputOperator = item.operator
+    this.showText = item.showText
+    this.isFinalResult = true
   }
 
   private reset() {

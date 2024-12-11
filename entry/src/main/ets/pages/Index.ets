@@ -15,28 +15,20 @@ struct Index {
   windowClass?: window.Window
 
   build() {
-    Column() {
+    Stack({alignContent: Alignment.TopStart}) {
       Row() {
-        Button() {
-          Text(this.showModel == CalculatorMode.Standard ? 'Standard' : 'Programmer')
-        }
-        .onClick(() => {
-          this.changeShowModel()
-        })
-      }
+        SymbolGlyph($r('sys.symbol.rectangle_portrait_rotate'))
 
-      // RelativeContainer() {
-      //   Text(this.message)
-      //     .id('HelloWorld')
-      //     .fontSize(50)
-      //     .fontWeight(FontWeight.Bold)
-      //     .alignRules({
-      //       center: { anchor: '__container__', align: VerticalAlign.Center },
-      //       middle: { anchor: '__container__', align: HorizontalAlign.Center }
-      //     })
-      // }
-      // .height('100%')
-      // .width('100%')
+        Text(this.showModel == CalculatorMode.Standard ? '标准' : '程序员')
+      }
+      .height($r('app.float.top_title_bar_height'))
+      .width('100%')
+      .padding(8)
+      .justifyContent(FlexAlign.Start)
+      .alignItems(VerticalAlign.Top)
+      .onClick(() => {
+        this.changeShowModel()
+      })
 
       if (this.showModel == CalculatorMode.Standard) {
         StandardComponent()

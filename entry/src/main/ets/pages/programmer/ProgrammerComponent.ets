@@ -38,28 +38,48 @@ export struct ProgrammerComponent {
   isNeedClrInput: Boolean = false
 
   build() {
-    Row() {
-      this.LeftKeyBoardContent()
+    Column() {
+      // 顶部菜单
+      this.TopBar()
 
-      Divider()
-        .vertical(true)
-        .padding({ top: 16, bottom: 16 })
+      Row() {
+        this.LeftKeyBoardContent()
 
-      this.CenterScreenContent()
+        Divider()
+          .vertical(true)
+          .padding({ top: 16, bottom: 16 })
 
-      Divider()
-        .vertical(true)
-        .padding({ top: 16, bottom: 16 })
+        this.CenterScreenContent()
 
-      this.RightKeyBoardContent()
+        Divider()
+          .vertical(true)
+          .padding({ top: 16, bottom: 16 })
+
+        this.RightKeyBoardContent()
+      }
+      .margin({top: $r('app.float.top_title_bar_height')})
+      .width('100%')
+      .height('100%')
+      .alignItems(VerticalAlign.Center)
     }
     .width('100%')
     .height('100%')
-    .alignItems(VerticalAlign.Center)
   }
 
   aboutToAppear(): void {
     this.forbidBtn = getForbidBtn(this.currentInputBase)
+  }
+
+  @Builder
+  private TopBar() {
+    Row() {
+      // TODO 程序员计算器的顶部菜单
+    }
+    .height($r('app.float.top_title_bar_height'))
+    .width('100%')
+    .padding(8)
+    .justifyContent(FlexAlign.End)
+    .alignItems(VerticalAlign.Top)
   }
 
   @Builder

@@ -1,26 +1,16 @@
+
+@Preview
 @Entry
 @Component
 struct StartWidgetCard {
-  @State x: number = 1
-  @State y: number = 1
 
   build() {
     Column() {
-      Button('Click to enlarge')
-        .onClick(() => {
-          this.x = 1.1
-          this.y = 1.1
-        })
-        .scale({ x: this.x, y: this.y })
-        .animation({
-          curve: Curve.EaseOut,
-          playMode: PlayMode.AlternateReverse,
-          duration: 200,
-          onFinish: () => {
-            this.x = 1
-            this.y = 1
-          }
-        })
+      Image($r('app.media.startIcon'))
+        .height('60%')
+
+      Text('打开计算器')
+        .padding({top: 4})
     }
     .padding('10vp')
     .width('100%')
@@ -30,9 +20,6 @@ struct StartWidgetCard {
       postCardAction(this, {
         "action": 'router',
         "abilityName": 'EntryAbility',
-        "params": {
-          "message": 'router test'
-        }
       });
     })
   }

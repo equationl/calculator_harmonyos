@@ -239,18 +239,25 @@ export struct ProgrammerComponent {
   }
 
   @Builder
-  private ButtonContent(item: KeyBoardBean, onClick: (event: ClickEvent) => void) {
+  private ButtonContent(item: KeyBoardBean, onClick: () => void) {
 
     Button(item.text)
       .width('100%')
       .height('100%')
-      .onClick(onClick)
+
       .type(ButtonType.Normal)
       .enabled(item.isAvailable && !this.forbidBtn.includes(item.index))
       .backgroundColor(item.isFilled ? item.color : $r('app.color.button_background'))
       .fontColor(item.isFilled ? $r('sys.color.font_on_primary') : item.color)
       .fontWeight(FontWeight.Bold)
       .fontSize($r('app.float.button_font_size'))
+      .onClick(onClick)
+      .gesture(
+        LongPressGesture({repeat: true, duration: 100})
+          .onAction(() => {
+            onClick()
+          })
+      )
   }
 
   // ==================================================================================================================

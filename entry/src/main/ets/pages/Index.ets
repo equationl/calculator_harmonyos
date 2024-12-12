@@ -43,15 +43,21 @@ struct Index {
 
     // 监听屏幕变化
     this.windowClass?.on('windowSizeChange', (size) => {
-      let viewWidth = px2vp(size.width);
-      let viewHeight = px2vp(size.height);
-
-      if (viewWidth > viewHeight) {
+      if (size.width > size.height) {
         this.showModel = CalculatorMode.Programmer
       } else {
         this.showModel = CalculatorMode.Standard
       }
     });
+
+    // 初始化显示的类型
+    let properties = this.windowClass.getWindowProperties();
+    if (properties.windowRect.width > properties.windowRect.height) {
+      this.showModel = CalculatorMode.Programmer
+    }
+    else {
+      this.showModel = CalculatorMode.Standard
+    }
   }
 
   /**

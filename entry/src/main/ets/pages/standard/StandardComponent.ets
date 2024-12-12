@@ -9,6 +9,7 @@ import { HistoryBean } from '../../common/dataBean/HistoryBean'
 import { window } from '@kit.ArkUI'
 import { common } from '@kit.AbilityKit'
 import { BusinessError } from '@kit.BasicServicesKit'
+import { arrayRemove } from '../../util/Util'
 
 @Preview
 @Component
@@ -191,20 +192,32 @@ export struct StandardComponent {
         List({ space: 20, initialIndex: 0 }) {
           ForEach(this.historyData, (item: HistoryBean) => {
             ListItem() {
-              Column() {
-                Text(item.showText)
-                  .fontSize(22)
-                  .fontWeight(FontWeight.Lighter)
-                Text(item.result)
-                  .fontSize(32)
-                  .fontWeight(FontWeight.Bold)
-                  .padding({top: 4})
+              Button() {
+                Column() {
+                  Text(item.showText)
+                    .fontSize(22)
+                    .fontWeight(FontWeight.Lighter)
+                  Text(item.result)
+                    .fontSize(32)
+                    .fontWeight(FontWeight.Bold)
+                    .padding({top: 4})
+                }
+                .width('100%')
+                .alignItems(HorizontalAlign.End)
               }
               .width('100%')
-              .alignItems(HorizontalAlign.End)
+              .type(ButtonType.Normal)
+              .backgroundColor(Color.Transparent)
               .onClick(() => {
                 this.clickHistoryItem(item)
               })
+              .gesture(
+                LongPressGesture({repeat: false})
+                  .onAction(() => {
+                    this.historyData = arrayRemove(this.historyData, item)
+                    // this.historyData.
+                  })
+              )
             }
           }, (item: HistoryBean) => item.time)
         }
@@ -237,16 +250,22 @@ export struct StandardComponent {
   }
 
   @Builder
-  private ButtonContent(item: KeyBoardBean, onClick: (event: ClickEvent) => void) {
+  private ButtonContent(item: KeyBoardBean, onClick: () => void) {
     Button(item.text)
       .width('100%')
       .height('100%')
-      .onClick(onClick)
       .type(ButtonType.Normal)
       .backgroundColor(item.isFilled ? item.color : $r('app.color.button_background'))
       .fontColor(item.isFilled ? $r('sys.color.font_on_primary') : item.color)
       .fontWeight(FontWeight.Bold)
       .fontSize($r('app.float.button_font_size'))
+      .onClick(onClick)
+      .gesture(
+        LongPressGesture({repeat: true, duration: 100})
+          .onAction(() => {
+            onClick()
+          })
+      )
   }
 
   // =================================================================================================================

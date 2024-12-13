@@ -1,10 +1,24 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "Release",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "0000001AA25443C09D4F4EFFCCDA768D84BD29F7476567753600193CB3DDFD277E2AD1300FF1E8E0CAF4",
+          "certpath": "/Users/equationl/harmonyProject/equationl0.cer",
+          "keyAlias": "equationl",
+          "keyPassword": "0000001AD59C2304EBCEC0538DC594C5D3300BF6842E1EBD5A7ED3DEA16191A221C879782C5C76090ED1",
+          "profile": "/Users/equationl/harmonyProject/equationl0Release.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/equationl/harmonyProject/equationl0.p12"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "Release",
         "compatibleSdkVersion": "5.0.1(13)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {
